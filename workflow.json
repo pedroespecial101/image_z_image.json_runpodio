@@ -1,0 +1,80 @@
+{
+  "66": {
+    "inputs": {
+      "unet_name": "z_image_bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader"
+  },
+  "62": {
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "lumina2"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "63": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "67": {
+    "inputs": {
+      "text": "A serene mountain landscape at sunset with vibrant orange and purple clouds",
+      "clip": ["62", 0]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "71": {
+    "inputs": {
+      "text": "",
+      "clip": ["62", 0]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "68": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage"
+  },
+  "70": {
+    "inputs": {
+      "model": ["66", 0],
+      "shift": 3
+    },
+    "class_type": "ModelSamplingAuraFlow"
+  },
+  "69": {
+    "inputs": {
+      "seed": 42,
+      "steps": 25,
+      "cfg": 4,
+      "sampler_name": "res_multistep",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": ["70", 0],
+      "positive": ["67", 0],
+      "negative": ["71", 0],
+      "latent_image": ["68", 0]
+    },
+    "class_type": "KSampler"
+  },
+  "65": {
+    "inputs": {
+      "samples": ["69", 0],
+      "vae": ["63", 0]
+    },
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "z-image",
+      "images": ["65", 0]
+    },
+    "class_type": "SaveImage"
+  }
+}
