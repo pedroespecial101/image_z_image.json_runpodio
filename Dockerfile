@@ -1,6 +1,10 @@
 # clean base image containing only comfyui, comfy-cli and comfyui-manager
 FROM runpod/worker-comfyui:5.5.1-base
 
+# Update ComfyUI to latest version for Z-Image native node support
+WORKDIR /comfyui
+RUN git pull origin master && pip install --no-cache-dir -r requirements.txt
+
 # install custom nodes into comfyui (first node with --mode remote to fetch updated cache)
 # Could not resolve unknown_registry node: MarkdownNote - no aux_id provided; skipping installation
 # Could not resolve unknown_registry node: MarkdownNote - no aux_id provided; skipping installation
